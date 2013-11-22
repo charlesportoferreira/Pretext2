@@ -1,4 +1,3 @@
-
 package pretext2;
 
 import java.io.BufferedReader;
@@ -22,18 +21,19 @@ public class Pretext2 {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-       
-           // Runtime.getRuntime().exec("");
-            System.out.println("Lendo Atributos");
-            String atributos = lerArquivo("discover", ".names");
-            System.out.println("Lendo dados");
-            String dados = lerArquivo("discover", ".data");
-    
+
+        String nomeArquivo = args.length > 0 ? args[0] : "resultado.arff";
+        // Runtime.getRuntime().exec("");
+        System.out.println("Lendo Atributos");
+        String atributos = lerArquivo("discover", ".names");
+        System.out.println("Lendo dados");
+        String dados = lerArquivo("discover", ".data");
+
             //System.out.println(ar);
-            //System.out.println(pretextToARFF(dados, atributos));
-            salvarArquivo(pretextToARFF(dados, atributos));
-            salvarArquivo(pretextToARFF(dados, atributos));
-       
+        //System.out.println(pretextToARFF(dados, atributos));
+        salvarArquivo(pretextToARFF(dados, atributos), nomeArquivo);
+        salvarArquivo(pretextToARFF(dados, atributos), nomeArquivo);
+
     }
 
     public static String pretextToARFF(String arquivoData, String arquivoNames) {
@@ -76,9 +76,6 @@ public class Pretext2 {
             Logger.getLogger(Pretext2.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-
-
-
         try {
             FileReader fr = new FileReader(arquivo);
             //System.out.println(arquivo.length());
@@ -109,8 +106,8 @@ public class Pretext2 {
         return linha;
     }
 
-    public static void salvarArquivo(String texto) {
-        File arquivo = new File("resultado.arff");
+    public static void salvarArquivo(String texto, String nomeArquivo) {
+        File arquivo = new File(nomeArquivo);
         boolean existe = arquivo.exists();
         try {
             if (!existe) {
