@@ -31,7 +31,7 @@ public class Pretext2 {
 
             //System.out.println(ar);
         //System.out.println(pretextToARFF(dados, atributos));
-        salvarArquivo(pretextToARFF(dados, atributos), nomeArquivo);
+        //salvarArquivo(pretextToARFF(dados, atributos), nomeArquivo);
         salvarArquivo(pretextToARFF(dados, atributos), nomeArquivo);
 
     }
