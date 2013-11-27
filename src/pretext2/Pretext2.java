@@ -22,8 +22,8 @@ public class Pretext2 {
      */
     public static void main(String[] args) {
 
-        //String nomeArquivo = args.length > 0 ? args[0] : "resultado.arff";
-        // Runtime.getRuntime().exec("");
+        String nomeArquivo = args.length > 0 ? args[0] : "resultado.arff";
+        
         System.out.println("Lendo Atributos");
         String atributos = lerArquivo("discover", ".names");
         System.out.println("Lendo dados");
@@ -31,8 +31,8 @@ public class Pretext2 {
 
             //System.out.println(ar);
         //System.out.println(pretextToARFF(dados, atributos));
-        //salvarArquivo(pretextToARFF(dados, atributos), nomeArquivo);
-        salvarArquivo(pretextToARFF(dados, atributos));
+        salvarArquivo(pretextToARFF(dados, atributos), nomeArquivo);
+       // salvarArquivo(pretextToARFF(dados, atributos));
 
     }
 
@@ -106,8 +106,8 @@ public class Pretext2 {
         return linha;
     }
 
-    public static void salvarArquivo(String texto ) {
-        File arquivo = new File("resultado.arff");
+    public static void salvarArquivo(String texto,String nomeArquivo ) {
+        File arquivo = new File(nomeArquivo);
         boolean existe = arquivo.exists();
         try {
             if (!existe) {
