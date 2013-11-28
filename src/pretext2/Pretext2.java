@@ -23,20 +23,42 @@ public class Pretext2 {
     public static void main(String[] args) {
 
         String nomeArquivo = args.length > 0 ? args[0] : "resultado.arff";
-        
+
         System.out.println("Lendo Atributos");
-        String atributos = lerArquivo("discover", ".names");
+        StringBuilder atributos = lerArquivo("discover", ".names");
+        //    *************
+        String arquivoNames = atributos.toString();
+        arquivoNames = arquivoNames.replaceAll("(att_class.\n)", "@RELATION teste-incial");
+        arquivoNames = arquivoNames.replaceAll("filename:string:ignore.", "\n");
+        arquivoNames = arquivoNames.replaceAll("\":integer\\.", " NUMERIC");
+        arquivoNames = arquivoNames.replaceAll("\":real\\.", " NUMERIC");
+        arquivoNames = arquivoNames.replaceAll("(att_class:nominal\\(\")", "@ATTRIBUTE classe {");
+        arquivoNames = arquivoNames.replaceAll("\"\\)\\.", "}");
+        arquivoNames = arquivoNames.replaceAll("\",\"", ",");
+        arquivoNames = arquivoNames.replaceAll("\"", "@ATTRIBUTE ");
+        System.out.println("Salvando Atributos");
+        salvarArquivo(arquivoNames.toString(), nomeArquivo);
+
         System.out.println("Lendo dados");
-        String dados = lerArquivo("discover", ".data");
+        StringBuilder dados = lerArquivo("discover", ".data");
+        String arquivoData = dados.toString();
+        arquivoData = "@DATA" + "\n" + arquivoData;
+        arquivoData = arquivoData.replaceAll("\".*\",", "");
+        System.out.println("Salvando Dados");
+        salvarArquivo(arquivoData.toString(), nomeArquivo);
+      // ****************** 
+        //  System.out.println("Lendo dados");
+        //  StringBuilder dados = lerArquivo("discover", ".data");
 
-            //System.out.println(ar);
+        //System.out.println(ar);
         //System.out.println(pretextToARFF(dados, atributos));
-        salvarArquivo(pretextToARFF(dados, atributos), nomeArquivo);
-       // salvarArquivo(pretextToARFF(dados, atributos));
-
+        //  salvarArquivo(pretextToARFF(dados.toString(), atributos.toString()).toString(), nomeArquivo);
+        // pretextToARFF(atributos.toString(), dados.toString(), nomeArquivo);
+      //  salvarArquivo(nomeArquivo, nomeArquivo);
+        // salvarArquivo(pretextToARFF(dados, atributos));
     }
 
-    public static String pretextToARFF(String arquivoData, String arquivoNames) {
+    public static void pretextToARFF(String arquivoData, String arquivoNames, String nomeArquivo) {
         System.out.println("convertendo atributos");
         arquivoNames = arquivoNames.replaceAll("(att_class.\n)", "@RELATION teste-incial");
         arquivoNames = arquivoNames.replaceAll("filename:string:ignore.", "\n");
@@ -46,17 +68,40 @@ public class Pretext2 {
         arquivoNames = arquivoNames.replaceAll("\"\\)\\.", "}");
         arquivoNames = arquivoNames.replaceAll("\",\"", ",");
         arquivoNames = arquivoNames.replaceAll("\"", "@ATTRIBUTE ");
+        System.out.println("Salvando Atributos");
+        salvarArquivo(arquivoNames.toString(), nomeArquivo);
 
         System.out.println("convertendo dados");
         arquivoData = "@DATA" + "\n" + arquivoData;
         arquivoData = arquivoData.replaceAll("\".*\",", "");
+        System.out.println("Salvando Dados");
+        salvarArquivo(arquivoData.toString(), nomeArquivo);
 
-        String arquivoFinal = arquivoNames + "\n" + arquivoData;
-        return arquivoFinal;
+       // StringBuilder arquivoFinal = new StringBuilder();
+        //arquivoFinal.append(arquivoNames).append("\n").append(arquivoData);
+        // return arquivoFinal;
     }
 
-    public static String lerArquivo(String nome, String extensao) {
-        String linha = "";
+    public static String convertArquivoData(String arquivoData) {
+        arquivoData = "@DATA" + "\n" + arquivoData;
+        arquivoData = arquivoData.replaceAll("\".*\",", "");
+        return arquivoData;
+    }
+
+    public static String convertArquivoNames(String arquivoNames) {
+        arquivoNames = arquivoNames.replaceAll("(att_class.\n)", "@RELATION teste-incial");
+        arquivoNames = arquivoNames.replaceAll("filename:string:ignore.", "\n");
+        arquivoNames = arquivoNames.replaceAll("\":integer\\.", " NUMERIC");
+        arquivoNames = arquivoNames.replaceAll("\":real\\.", " NUMERIC");
+        arquivoNames = arquivoNames.replaceAll("(att_class:nominal\\(\")", "@ATTRIBUTE classe {");
+        arquivoNames = arquivoNames.replaceAll("\"\\)\\.", "}");
+        arquivoNames = arquivoNames.replaceAll("\",\"", ",");
+        arquivoNames = arquivoNames.replaceAll("\"", "@ATTRIBUTE ");
+        return arquivoNames;
+    }
+
+    public static StringBuilder lerArquivo(String nome, String extensao) {
+        StringBuilder linha = new StringBuilder();
         File arquivo = new File(nome + extensao);
         int qtdLinha = 0;
 
@@ -83,8 +128,8 @@ public class Pretext2 {
             int i = 0;
             try {
                 while (br.ready()) {
-                    linha += br.readLine();
-                    linha += "\n";
+                    linha.append(br.readLine());
+                    linha.append("\n");
                     i = i + 1;
 
                     //imprime de dez em dez %
@@ -106,7 +151,7 @@ public class Pretext2 {
         return linha;
     }
 
-    public static void salvarArquivo(String texto,String nomeArquivo ) {
+    public static void salvarArquivo(String texto, String nomeArquivo) {
         File arquivo = new File(nomeArquivo);
         boolean existe = arquivo.exists();
         try {
@@ -117,7 +162,7 @@ public class Pretext2 {
             Logger.getLogger(Pretext2.class.getName()).log(Level.SEVERE, null, ex);
         }
         try {
-            try (FileWriter fw = new FileWriter(arquivo);
+            try (FileWriter fw = new FileWriter(arquivo, true);
                     BufferedWriter bw = new BufferedWriter(fw)) {
                 bw.write(texto);
                 bw.newLine();
